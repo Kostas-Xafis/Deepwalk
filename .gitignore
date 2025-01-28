@@ -9,3 +9,4 @@ include/
 share/
 .vscode/
 *.csv
+pyvenv.cfg

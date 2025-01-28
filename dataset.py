@@ -1,3 +1,4 @@
+import os
 import torch
 import networkx as nx
 import pandas as pd
@@ -11,7 +12,11 @@ class GraphDataset(Dataset):
         self.graph = graph
         self.gamma = gamma
         self.walk_length = walk_length
+        
+        if not exists("./datasets"):
+            os.mkdir("./datasets")
         self.dataset = self.generate_dataset()
+    
     def __len__(self):
         return len(self.dataset)
 
@@ -31,10 +36,11 @@ class GraphDataset(Dataset):
             return [(torch.tensor(list(map(int, x[0][1:-1].split(",")))), torch.tensor(x[1])) for x in dataset.values]
         walks = self.generate_walks()
         dataset = []
-        walk_length = len(walks[0])
+
+        # half window size
         hw_size = (self.window_size - 1) // 2
         for walk in walks:
-            for i in range(hw_size, walk_length - hw_size):
+            for i in range(hw_size, self.walk_length - hw_size):
                 target = walk[i]
                 context = walk[i - hw_size:i] + walk[i + 1:i + hw_size + 1]
                 dataset.append((context, target))
@@ -42,7 +48,7 @@ class GraphDataset(Dataset):
         pd.DataFrame(columns=["context", "target"], data=dataset)\
             .to_csv(self._get_dataset_name(), index=False)
 
-        dataset = [(torch.tensor(context), torch.tensor(target)) for context, target in dataset]    
+        dataset = [(torch.tensor(context), torch.tensor(target)) for context, target in dataset]
 
         return dataset
 
@@ -67,7 +73,6 @@ def build_vocab(G: nx.Graph) -> dict:
 
 def generate_dataset(graph: nx.Graph, walk_length: int, window_size: int, num_walks: int, batch_size=32):
     dataset = GraphDataset(graph, num_walks, walk_length, window_size)
-    # Write dataset in the dataset folder
 
     print(f"Dataset size: {len(dataset)}")
     generator = torch.Generator().manual_seed(42)
