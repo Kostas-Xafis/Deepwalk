@@ -3,26 +3,25 @@ import networkx as nx
 import pandas as pd
 from os.path import exists
 from torch.utils.data import Dataset, DataLoader, random_split
-
-from utils import get_device, load_to_device
+from utils.device import get_device, device_data_loader
 
 class GraphDataset(Dataset):
-    def __init__(self, graph:nx.Graph, num_walks: int, walk_length: int, window_size: int):
+    def __init__(self, graph:nx.Graph, gamma: int, walk_length: int, window_size: int):
         self.window_size = window_size
         self.graph = graph
-        self.num_walks = num_walks
+        self.gamma = gamma
         self.walk_length = walk_length
         self.dataset = self.generate_dataset()
     def __len__(self):
         return len(self.dataset)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
         return self.dataset[idx]
-    
-    def _get_dataset_name(self):
-        return f"datasets/{self.graph.name}_{self.walk_length}_{self.window_size}_{self.num_walks}.csv"
 
-    def check_if_exists(self):        
+    def _get_dataset_name(self):
+        return f"datasets/{self.graph.name}_{self.walk_length}_{self.window_size}_{self.gamma}.csv"
+
+    def check_if_exists(self):
         return exists(self._get_dataset_name())
 
     def generate_dataset(self):
@@ -33,23 +32,23 @@ class GraphDataset(Dataset):
         walks = self.generate_walks()
         dataset = []
         walk_length = len(walks[0])
-        half_window = (self.window_size - 1) // 2
+        hw_size = (self.window_size - 1) // 2
         for walk in walks:
-            for i in range(half_window, walk_length - half_window):
+            for i in range(hw_size, walk_length - hw_size):
                 target = walk[i]
-                context = walk[i - half_window:i] + walk[i + 1:i + half_window + 1]
+                context = walk[i - hw_size:i] + walk[i + 1:i + hw_size + 1]
                 dataset.append((context, target))
 
         pd.DataFrame(columns=["context", "target"], data=dataset)\
             .to_csv(self._get_dataset_name(), index=False)
 
-        dataset = [(torch.tensor(context), torch.tensor(target)) for context, target in dataset]        
+        dataset = [(torch.tensor(context), torch.tensor(target)) for context, target in dataset]    
 
         return dataset
 
     def generate_walks(self) -> list[list[int]]:
         walks = []
-        for _ in range(self.num_walks):
+        for _ in range(self.gamma):
             for node in self.graph.nodes():
                 walk = [node]
                 for _ in range(self.walk_length - 1):
@@ -66,7 +65,7 @@ def build_vocab(G: nx.Graph) -> dict:
         vocab[node] = i
     return vocab
 
-def generate_dataset(graph: nx.Graph, walk_length: int, window_size: int, num_walks: int, batch_size=32):    
+def generate_dataset(graph: nx.Graph, walk_length: int, window_size: int, num_walks: int, batch_size=32):
     dataset = GraphDataset(graph, num_walks, walk_length, window_size)
     # Write dataset in the dataset folder
 
@@ -76,9 +75,9 @@ def generate_dataset(graph: nx.Graph, walk_length: int, window_size: int, num_wa
 
     train_ds = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
     test_ds = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
-    
+
     device = get_device()
-    train_ds = [load_to_device(context, target, device) for context, target in train_ds]
-    test_ds = [load_to_device(context, target, device) for context, target in test_ds]
-    
+    train_ds = device_data_loader(device, train_ds)
+    test_ds = device_data_loader(device, test_ds)
+
     return train_ds, test_ds

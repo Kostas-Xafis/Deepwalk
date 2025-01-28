@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 class CBOW(nn.Module):
@@ -10,10 +9,7 @@ class CBOW(nn.Module):
 
     def forward(self, w):
         w = self.embeddings(w)
-        w = w.sum(dim=1)
+        w = w.mean(dim=1)
         w = self.linear(w)
         w = self.sf(w)
         return w
-
-def deepwalk_loss(pred, target):
-    return -torch.mean(torch.log(pred[range(len(target)), target]))

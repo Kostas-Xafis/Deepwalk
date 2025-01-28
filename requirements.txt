@@ -2,3 +2,5 @@ networkx
 torch
 matplotlib
 scikit-learn
+pandas
+PyQt6
