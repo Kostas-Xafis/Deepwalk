@@ -19,6 +19,7 @@ This project utilizes a CBOW-based model to embed the Karate Club network, allow
 
     ```bash
     git clone https://github.com/Kostas-Xafis/Deepwalk.git
+    cd ./Deepwalk
     ```
 
 2. Create a Python virtual environment and activate it.
@@ -36,22 +37,22 @@ This project utilizes a CBOW-based model to embed the Karate Club network, allow
 
 ## Usage
 
-1. Single training run:
+1. Single training run (w/ default parameters):
 
     ```bash
-    python training.py --exec train
+    python deepwalk.py
     ```
 
 2. Grid search:
 
     ```bash
-    python training.py --exec grid
+    python deepwalk.py --exec grid
     ```
 
 3. Adjust parameters, for example:
 
     ```bash
-    python training.py --window_size 5 --walk_length 3
+    python deepwalk.py --window_size 5 --walk_length 3
     ```
 
 ## Parameter Guide
