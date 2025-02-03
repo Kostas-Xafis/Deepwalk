@@ -15,7 +15,7 @@ This project utilizes a CBOW-based model to embed the Karate Club network, allow
 
 ## Installation
 
-1. Clone the repository.  
+1. Clone the repository.
 
     ```bash
     git clone https://github.com/Kostas-Xafis/Deepwalk.git
@@ -23,11 +23,11 @@ This project utilizes a CBOW-based model to embed the Karate Club network, allow
 
 2. Create a Python virtual environment and activate it.
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
-  
+    ```bash
+    python -m venv venv
+    source venv/bin/activate
+    ```
+
 3. Install dependencies:
 
     ```bash
@@ -56,9 +56,13 @@ This project utilizes a CBOW-based model to embed the Karate Club network, allow
 
 ## Parameter Guide
 
-• window_size (int, default=3): Context window size.  
-• walk_length (int, default=window_size): Steps per walk.  
-• num_walks (int, default=1000): Walks per node.  
-• embedding_dim (int, default=12): Dimension of embeddings.  
-• epochs (int, default=500): Training epochs.  
-• exec (str, default="grid"): Execution mode ("grid" or "train").
+```markdown
+--window_size:    Size of the context window (default: 3).  
+--walk_length:    Length of the random walk (default: window_size).  
+--num_walks:      Number of random walks to generate for each node (default: 1000).  
+--embedding_dim:  Dimension of the node embeddings (default: 12).  
+--batch_size:     Batch size for training (default: 256).
+--epochs:         Number of epochs to train the model (default: 500).  
+--exec:           Execution mode 'grid'|'train' (default: train).
+--verbose:        Output any information while training (default: False).
+```

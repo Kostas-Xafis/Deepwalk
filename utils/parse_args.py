@@ -23,8 +23,9 @@ def parse_cbow_args():
         'num_walks': (int, 1000, 'Number of random walks to generate for each node (default: 1000).'),
         'embedding_dim': (int, 12, 'Dimension of the node embeddings (default: 12).'),
         'epochs': (int, 500, 'Number of epochs to train the model (default: 500).'),
+        'batch_size': (int, 256, 'Batch size for training (default: 256).'),
         'verbose': (bool, False, 'Print the training and testing logs (default: False).'),
-        'exec': (str, 'grid', "Execution mode 'grid'|'train' (default: grid)."),
+        'exec': (str, 'train', "Execution mode 'grid'|'train' (default: train)."),
     }
 
     if '--help' in sys.argv or '-h' in sys.argv:
@@ -54,7 +55,7 @@ def parse_args():
 
 def cbow_args():
     args = parse_args()
-    # Return the CBOW arguments
+    # Return the CBOW arguments when grid search is not applied
     if args is None or args['exec'] == 'grid':
         return None
 
@@ -63,4 +64,5 @@ def cbow_args():
         'walk_length': [args['walk_length']],
         'num_walks': [args['num_walks']],
         'embedding_dim': [args['embedding_dim']],
+        'batch_size': [args['batch_size']],
     }
