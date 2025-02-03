@@ -10,3 +10,4 @@ share/
 .vscode/
 *.csv
 pyvenv.cfg
+datasets/

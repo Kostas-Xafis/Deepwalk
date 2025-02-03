@@ -74,7 +74,7 @@ def build_vocab(G: nx.Graph) -> dict:
 def generate_dataset(graph: nx.Graph, walk_length: int, window_size: int, num_walks: int, batch_size=32):
     dataset = GraphDataset(graph, num_walks, walk_length, window_size)
 
-    print(f"Dataset size: {len(dataset)}")
+    print(f"Dataset size: {len(dataset)} walks")
     generator = torch.Generator().manual_seed(42)
     train_ds, test_ds = random_split(dataset, [0.8, 0.2], generator=generator)
 

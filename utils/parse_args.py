@@ -19,7 +19,7 @@ def parser(arg_specs: dict[str, tuple]):
 def parse_cbow_args():
     arg_specs = {
         'window_size': (int, 3, 'Size of the context window (default: 3).'),
-        'walk_length': (int, 0, 'Length of the random walk (default: window_size).'),
+        'walk_length': (int, 0, 'Length of the random walk (minimum default: 0 = window_size).'),
         'num_walks': (int, 1000, 'Number of random walks to generate for each node (default: 1000).'),
         'embedding_dim': (int, 12, 'Dimension of the node embeddings (default: 12).'),
         'epochs': (int, 500, 'Number of epochs to train the model (default: 500).'),

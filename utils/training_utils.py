@@ -69,15 +69,18 @@ def train(model: nn.Module, optimizer: optim.Optimizer,
             scheduler.step()
             after_lr = optimizer.param_groups[0]['lr']
             if after_lr != curr_lr:
-                print(f'Learning rate: {curr_lr} -> {after_lr}')
+                _print(f'Learning rate: {curr_lr} -> {after_lr}')
             else:
                 _print(f'Learning rate: {curr_lr}')
             curr_lr = after_lr
 
         if epoch == epochs - 1:
-            print(f'Final Test Accuracy: {(test_acc * 100):.4f}%')            
-        if estop(train_loss, test_loss):
-            print("Early stopping")
+            print(f'Final Test Accuracy: {(test_acc * 100):.4f}% \n')
+            print(f'Final Train Accuracy: {(train_acc * 100):.4f}% \n')
+        if estop(train_loss):
+            print(f'Final Test Accuracy: {(test_acc * 100):.4f}%')
+            print(f'Final Train Accuracy: {(train_acc * 100):.4f}%')
+            print("Early stopping - Last epoch:", epoch + 1)
             break
 
 def extract_embeddings(model: nn.Module):
