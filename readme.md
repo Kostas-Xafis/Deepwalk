@@ -35,6 +35,9 @@ This project utilizes a CBOW-based model to embed the Karate Club network, allow
     pip install -r requirements.txt
     ```
 
+> [!IMPORTANT]
+The code has not been tested in a Colab environment and therefore it might not work.
+
 ## Usage
 
 1. Single training run (w/ default parameters):

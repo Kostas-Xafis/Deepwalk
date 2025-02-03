@@ -11,3 +11,4 @@ share/
 *.csv
 pyvenv.cfg
 datasets/
+*.zip
